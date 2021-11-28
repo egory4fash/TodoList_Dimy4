@@ -43,24 +43,29 @@ export const TodoList = (props: TodoListPropsType) => {
 
         if (e.key === "Enter") {
             props.addTask(newTaskTitle);
+            setNewTaskTitle('')
         }
     }
+    const onClickHandler = () => {
+        props.addTask(newTaskTitle);
+        setNewTaskTitle('')
+    }
+
+    const onAllClickHandler = () => {props.setFilter('all')}
+    const onActiveClickHandler = () => {props.setFilter('active')}
+    const onCompleteClickHandler = () => {props.setFilter('completed')}
+
     return (
         <div className="todolist">
             <h3>
                 {props.title}
                 <div>
                     <input value={newTaskTitle}
-                           onChange={inputTask}/>
+                           onChange={inputTask}
+                           onKeyPress={onKeyPressHandler}/>
+
                     <button
-                        onKeyPress={onKeyPressHandler}
-
-
-                        onClick={() => {
-                            props.addTask(newTaskTitle);
-                            setNewTaskTitle('')
-
-                        }}>+
+                        onClick={onClickHandler}>+
                     </button>
                 </div>
                 <ul>
@@ -68,17 +73,11 @@ export const TodoList = (props: TodoListPropsType) => {
 
                 </ul>
                 <div>
-                    <button onClick={() => {
-                        props.setFilter('all')
-                    }}>All
+                    <button onClick={onAllClickHandler}>All
                     </button>
-                    <button onClick={() => {
-                        props.setFilter('active')
-                    }}>Active
+                    <button onClick={onActiveClickHandler}>Active
                     </button>
-                    <button onClick={() => {
-                        props.setFilter('completed')
-                    }}>Completed
+                    <button onClick={onCompleteClickHandler}>Completed
                     </button>
                 </div>
             </h3>
