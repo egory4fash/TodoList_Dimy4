@@ -1,58 +1,85 @@
-import React from "react";
+import React, {ChangeEvent, useState,KeyboardEvent} from "react";
 import {FilterValuesType} from "./App";
+import './App.css'
 
 
 export type TasksType = {
-    id:number
-    title:string
-    isDone:boolean
+    id: string
+    title: string
+    isDone: boolean
 }
 type TodoListPropsType = {
     title: string
-    tasks:Array<TasksType>
-    deleteTask : (id:number) => void
-    setFilter : (value:FilterValuesType) => void
+    tasks: Array<TasksType>
+    deleteTask: (id: string) => void
+    setFilter: (value: FilterValuesType) => void
+    addTask: (title: string) => void
 
 }
 
-export const TodoList = (props:TodoListPropsType) => {
+export const TodoList = (props: TodoListPropsType) => {
 
-
+    const [newTaskTitle, setNewTaskTitle] = useState('')
 
 
     const JSXElems = props.tasks.map(t =>
-    <li>
-        <input type="checkbox" checked={t.isDone}/>
-    <span>
+        <li key={t.id}>
+            <input type="checkbox" checked={t.isDone}/>
+            <span>
         {t.title}
     </span>
-        <button onClick={() => {props.deleteTask (t.id)}}>x</button>
-    </li>)
+            <button onClick={() => {
+                props.deleteTask(t.id)
+            }}>x
+            </button>
+        </li>)
 
+    const inputTask = (e: ChangeEvent<HTMLInputElement>) => {
+        setNewTaskTitle(e.currentTarget.value)
+    }
+
+    const onKeyPressHandler = (e:KeyboardEvent<HTMLInputElement>
+    ) => {
+
+        if (e.key === "Enter") {
+            props.addTask(newTaskTitle);
+        }
+    }
     return (
-        <div>
+        <div className="todolist">
             <h3>
                 {props.title}
                 <div>
-                    <input/>
-                    <button>+</button>
+                    <input value={newTaskTitle}
+                           onChange={inputTask}/>
+                    <button
+                        onKeyPress={onKeyPressHandler}
+
+
+                        onClick={() => {
+                            props.addTask(newTaskTitle);
+                            setNewTaskTitle('')
+
+                        }}>+
+                    </button>
                 </div>
                 <ul>
                     {JSXElems}
-                {/*    <li><input type="checkbox" checked={props.tasks[0].isDone}/>*/}
-                {/*        <span>{props.tasks[0].title}</span>*/}
-                {/*    </li>*/}
-                {/*    <li><input type="checkbox" checked={props.tasks[1].isDone}/>*/}
-                {/*        <span>{props.tasks[1].title}</span>*/}
-                {/*    </li>*/}
-                {/*    <li><input type="checkbox" checked={props.tasks[2].isDone}/>*/}
-                {/*        <span>{props.tasks[2].title}</span>*/}
-                {/*    </li>*/}
+
                 </ul>
                 <div>
-                    <button onClick = { () => {props.setFilter('all')}}>All</button>
-                    <button onClick = { () => {props.setFilter('active')}}>Active</button>
-                    <button onClick = { () => {props.setFilter('completed')}}>Completed</button>
+                    <button onClick={() => {
+                        props.setFilter('all')
+                    }}>All
+                    </button>
+                    <button onClick={() => {
+                        props.setFilter('active')
+                    }}>Active
+                    </button>
+                    <button onClick={() => {
+                        props.setFilter('completed')
+                    }}>Completed
+                    </button>
                 </div>
             </h3>
         </div>
