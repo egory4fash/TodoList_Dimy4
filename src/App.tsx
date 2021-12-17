@@ -51,12 +51,10 @@ export function App() {
         setTasks([...tasks1])
     }
     const changeFilter = (value: FilterValuesType, todolistID: string) => {
-        let todolist = todolists.find(tl => tl.id === todolistID);
-        if (todolist) {
-            todolist.filter = value;
-            setTodolists([...todolists])
+       setTodolists(todolists.map(m => m.id === todolistID ? {...m,filter:value} : {...m}))
         }
-    }
+
+
 
 
     return (
