@@ -1,6 +1,7 @@
 import React, {ChangeEvent, useState, KeyboardEvent} from "react";
 import {FilterValuesType} from "./App";
 import './App.css'
+import {Input} from "./Input";
 
 
 export type TasksType = {
@@ -11,29 +12,27 @@ export type TasksType = {
 type TodoListPropsType = {
     title: string
     tasks: Array<TasksType>
-    deleteTask: (id: string) => void
-    changeFilter: (value: FilterValuesType,todolistID:string) => void
-    addTask: (title: string) => void
-    changeTaskStatus: (taskID: string, isDone: boolean) => void
+    deleteTask: (todolistID: string, id: string) => void
+    changeFilter: (value: FilterValuesType, todolistID: string) => void
+    addTask: (todolistID: string, title: string) => void
+    changeTaskStatus: (todolistID: string, taskID: string, isDone: boolean) => void
     filter: FilterValuesType
-    todolistID:string
+    todolistID: string
+    removeTodolist: (todolistID: string) => void
 
 }
 
 export const TodoList = (props: TodoListPropsType) => {
 
-    const [newTaskTitle, setNewTaskTitle] = useState('')
-    const [error, setError] = useState<null | string>(null)
-
 
     const JSXElems = props.tasks.map(t => {
 
         const onChangeCheckboxHandler = (e: ChangeEvent<HTMLInputElement>) => {
-            props.changeTaskStatus(t.id, e.currentTarget.checked)
+            props.changeTaskStatus(props.todolistID, t.id, e.currentTarget.checked)
         }
         return (
             <li key={t.id}
-                className = {t.isDone ? "isDone" : ''}>
+                className={t.isDone ? "isDone" : ''}>
                 <input type="checkbox"
                        checked={t.isDone}
                        onChange={onChangeCheckboxHandler}
@@ -42,60 +41,40 @@ export const TodoList = (props: TodoListPropsType) => {
         {t.title}
     </span>
                 <button onClick={() => {
-                    props.deleteTask(t.id)
+                    props.deleteTask(props.todolistID, t.id)
                 }}>x
                 </button>
             </li>)
     })
 
-    const inputTask = (e: ChangeEvent<HTMLInputElement>) => {
-        setNewTaskTitle(e.currentTarget.value)
-    }
-
-    const onKeyPressHandler = (e: KeyboardEvent<HTMLInputElement>
-    ) => {
-        setError(null)
-        if (e.key === "Enter" && newTaskTitle.trim() !== "") {
-            props.addTask(newTaskTitle);
-            setNewTaskTitle('')
-        }
-    }
-
-    const onClickHandler = () => {
-        if (newTaskTitle.trim() !== "") {
-            props.addTask(newTaskTitle.trim());
-            setNewTaskTitle('')
-        } else {
-            setError("Title ts required")
-            return
-        }
-    }
 
     const onAllClickHandler = () => {
-        props.changeFilter('all',props.todolistID)
+        props.changeFilter('all', props.todolistID)
     }
     const onActiveClickHandler = () => {
-        props.changeFilter('active',props.todolistID)
+        props.changeFilter('active', props.todolistID)
     }
     const onCompleteClickHandler = () => {
-        props.changeFilter('completed',props.todolistID)
+        props.changeFilter('completed', props.todolistID)
+    }
+    const removeHandler = () => {
+        props.removeTodolist(props.todolistID)
     }
 
+    const addTaskHandler = (title: string) => {
+        props.addTask(props.todolistID, title)
+    }
     return (
         <div className="todolist">
+
             <h3>
                 {props.title}
+                <button onClick={removeHandler}>X</button>
                 <div>
-                    <input value={newTaskTitle}
-                           onChange={inputTask}
-                           onKeyPress={onKeyPressHandler}
-                           className={error ? 'error' : ''}/>
+                    <Input
 
+                        callBack={addTaskHandler} />
 
-                    <button
-                        onClick={onClickHandler}>+
-                    </button>
-                    {error && <div className='error-message'>Title is required</div>}
                 </div>
                 <ul>
                     {JSXElems}
