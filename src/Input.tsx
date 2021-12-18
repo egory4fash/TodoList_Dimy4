@@ -17,7 +17,7 @@ export const Input = (props:InputPropsType) => {
         if (e.key === "Enter" && newTaskTitle.trim() !== "") {
             props.callBack(newTaskTitle);
             setNewTaskTitle('')
-        }else {setError('Title is required')}
+        }
     }
 
     const onClickHandler = () => {
