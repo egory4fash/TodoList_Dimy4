@@ -38,7 +38,7 @@ export const TodoList = (props: TodoListPropsType) => {
                        checked={t.isDone}
                        onChange={onChangeCheckboxHandler}
                 />
-                <EditableSpan title = {props.title} />
+                <EditableSpan title={t.title}/>
                 <button onClick={() => {
                     props.deleteTask(props.todolistID, t.id)
                 }}>x
@@ -63,10 +63,12 @@ export const TodoList = (props: TodoListPropsType) => {
     const addTaskHandler = (title: string) => {
         props.addTask(props.todolistID, title)
     }
+
+    const getNewTitle
     return (
         <div className="todolist">
             <h3>
-                {props.title}
+                <EditableSpan title={props.title} callBack={}/>
                 <button onClick={removeHandler}>X</button>
                 <div>
                     <Input
